@@ -5,21 +5,60 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 
-const peer = new Peer("my-id", {
-  host: "tbbts-server-bbsi2.sprites.app",
-  port: "443",
-  path: "/",
-});
 
 function App() {
   const [count, setCount] = useState(0)
 
+  const urlPathArray = window.location.pathname.split('/');
+
   useEffect(() => {
-    const conn = peer.connect('your-id');
-    conn.on('open', () => {
+    console.log({urlPathArray});
+    const peer = new Peer({
+      host: "tbbts-server-bbsi2.sprites.app",
+      port: "443",
+      path: "/",
+      debug: 3,
     });
-    return () => {};
-  }, []);
+    console.log("peer object", peer);
+
+
+    peer.on('error', (e) => {
+      console.log(`peer ${peer.id} errored`, e);
+    });
+    peer.on('connection', (c) => {
+      console.log('received connection', c);
+    });
+
+    peer.on('open', (id) => {
+      console.log('peer open', id);
+
+    const to = urlPathArray[2];
+    if ( !!to ) { 
+      console.log('connecting to', to)
+      const conn = peer.connect(to);
+      console.log('conn is ', conn);
+
+      conn.on('iceStateChanged', (state) => {  
+        console.log('ICE connection state:', state);  
+      });
+
+      conn.on('open', () => {
+        window.alert('connection is now up!');
+        conn.send('hi');
+      });
+
+      conn.on('error', (e) => {
+        console.log('connection errored', e);
+      });
+    }
+    });
+
+    return () => {
+      // conn.close();
+      // peer.destroy();
+      // peer.disconnect();
+    };
+  }, [count]);
 
   return (
     <>
