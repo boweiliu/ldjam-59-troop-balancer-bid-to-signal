@@ -112,13 +112,13 @@ In the contract for `10R`, in the easy `1x` difficulty mode, suppose player 1 ha
 p1: G+2, G+2
 ```
 
-and player 2 has also only deployed 2 cards:
+and player 2 has also only deployed 2 cards there:
 
 ```
 p2: G+4, Gx2
 ```
 
-Then the total combat power in Green is `(2 + 2 + 4) x 2 = 16`. Since this is at least `10`, this lane is sufficient, and we should check the second lane.
+Then the total combat power in the Green lane is `(2 + 2 + 4) x 2 = 16`. Since this is at least `10`, this lane is sufficient, and we should check the second lane.
 
 Suppose the troops in the Blue lane are:
 
@@ -127,7 +127,7 @@ p1: B+1, B+4, Bx1.5, R+1, R+4, Rx2,
 p2: B+1, B+2, B+2,   R+2, R+2, Rx1.5
 ```
 
-Then the total combat power in Blue is `((1 + 4 + 1 + 4) + (1 + 2 + 2 + 2 + 2)) x 1.5 x 2 x 1.5 = 19 x 4.5 = 85.5`. Since this is also at least `10 x 1`, the players are victorious.
+Then the total combat power in the Blue lane is `(1 + 4 + 1 + 4 + 1 + 2 + 2 + 2 + 2) x 1.5 x 2 x 1.5 = 19 x 4.5 = 85.5`. Since this is also at least `10 x 1`, the players are victorious.
 
 ## Extra: optimization and discussion
 
