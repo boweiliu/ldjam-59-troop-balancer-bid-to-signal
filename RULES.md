@@ -40,7 +40,7 @@ At the start of the game, each player is dealt a private hand of 8 cards from th
 
 Flip a coin to determine who gets to start bidding. Players alternate bidding. No communication is allowed during this bidding phase.
 
-A valid bid is either `pass`, or is a bid of the form `[number] [color]` where `[number]` is a positive integer number strictly greater than the last bid, and `[color]` is one of *R*ed, *G*reen, or *B*lue.
+A valid bid is either `pass`, or is a bid of the form `[number] [color]` where `[number]` is a whole number strictly greater than the last bid, and `[color]` is one of *R*ed, *G*reen, or *B*lue.
 
 The first player to start bidding cannot pass. Bidding does not have to start at `1[color]`, and bids can skip numbers freely. Bidding the same number but a different color from the last bid is NOT permitted.
 
