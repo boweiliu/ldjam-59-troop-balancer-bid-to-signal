@@ -32,7 +32,7 @@ The 8 cards in each suit are:
 
 ### HANDS
 
-At the start of the game, each player is dealt face-down a hand of 8 cards from the deck of 24. They may look at their dealt cards.
+At the start of the game, each player is dealt a private hand of 8 cards from the deck of 24. They may look at their dealt cards.
 
 8 cards remain unused in the deck. These will not be used during the game.
 
