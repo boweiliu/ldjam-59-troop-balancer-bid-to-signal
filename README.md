@@ -10,3 +10,14 @@ TODO: html hosted web version.
 
 see: https://gist.github.com/zwrawr/d2ceb40c83d582192cdd80b0268a91cb
 and https://ldjam.com/events/ludum-dare/59/troop-balancing-bid-to-signal
+
+# AI USE DISCLAIMER
+
+AI was/will be used in this project to:
+
+* conduct research and explore prior art
+* search and understand documentation
+* deploy the webserver
+* package the print-and-play PDF
+
+

@@ -1,11 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Peer } from 'peerjs'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 
+const peer = new Peer("my-id", {
+  host: "tbbts-server-bbsi2.sprites.app",
+  port: "443",
+  path: "/",
+});
+
 function App() {
   const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    const conn = peer.connect('your-id');
+    conn.on('open', () => {
+    });
+    return () => {};
+  }, []);
 
   return (
     <>
