@@ -133,4 +133,4 @@ Then the total combat power in Blue is `((1 + 4 + 1 + 4) + (1 + 2 + 2 + 2 + 2)) 
 
 After players have revelead their troop deployments, it is possible to calculate the optimal bid and score given the distribution of cards in both players' hands. For instance, in the last example, the split amongst the lanes was (16, 85.5), whereas the optimal troop distribution was (39, 42). So they did not have an OPTIMAL victory which would have been at a bid of `39R`.
 
-
+Players are encouraged to discuss their bidding convention and how they might have bid higher and also better coordinated their troop deployments via sending signals during the bidding phase.
