@@ -21,9 +21,13 @@ The deck consists of 24 cards, separated into 3 suits, Red, Green, and Blue, wit
 The 8 cards in each suit are:
 
 2 copies of `+1`
+
 2 copies of `+2`
+
 2 copies of `+4`
+
 1 copy of `x 1.5`
+
 1 copy of `x 2`
 
 ### HANDS
