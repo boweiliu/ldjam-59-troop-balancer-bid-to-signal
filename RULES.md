@@ -1,6 +1,6 @@
 # Troop Balancer: Bid to Signal
 
-Troop Balancer is a 2-player cooperative card game where 2 players are dealt troop cards and take turns silently bidding on a cooperate contract, then deploy their troop cards in one of the 2 lanes, and finally reveal their decisions to see if they fulfilled their contract.
+Troop Balancer is a 2-player cooperative card game where 2 players are dealt troop cards, take turns silently bidding on a team contract, then deploy their troop cards in one of the 2 lanes, and finally reveal their decisions to see if they fulfilled the contract.
 
 The game is meant to be played multiple times with the same pair of players, accumulating knowledge and conventions specific to that pair of players.
 
@@ -12,7 +12,7 @@ Each game takes from 5 min - 2 hours. Metagame discussion is expected to occupy 
 2. Shuffle and deal hands.
 3. Silently bid on a contract.
 4. Secretly deploy troops.
-5. Conduct battle by reveal all cards and determining the outcome: defeat, victory, or OPTIMAL victory.
+5. Conduct battle by revealing all cards and determining the outcome: defeat, victory, or OPTIMAL victory.
 
 ## DECK
 
