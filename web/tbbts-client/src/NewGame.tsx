@@ -5,22 +5,32 @@ import { nanoid } from 'nanoid'
 const storageHelper = (_KEY_SUFFIX: string) => {
   return (lobbyId: string) => {
     const key = [lobbyId, _KEY_SUFFIX].join(':');
-    const get = () => localStorage.getItem(key);
-    const set = (v: any) => localStorage.setItem(key, v);
+    const get = () => {
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        return JSON.parse(raw).val;
+      } else {
+        return null
+      }
+    }
+    const set = (v: any) => {
+      localStorage.setItem(key, JSON.stringify({ val: v }) );
+      return v;
+    }
     const update = (xform: () => {}) => {
       const old = get();
       set(cb(old));
     };
-    const load = () => {
+    const loadWithDefault = (defVal: any) => {
       let it = get();
       if (!it) {
-        it = nanoid(8);
+        it = defVal;
         set(it);
       }
       return it;
       
     };
-    return { get, set, load, update };
+    return { get, set, loadWithDefault, update };
   };
 };
 
@@ -28,6 +38,7 @@ const storageHelper = (_KEY_SUFFIX: string) => {
 const storage = {
   gameSeed: storageHelper('game-seed'),
   myPlayerId: storageHelper('my-player-id'),
+  allPlayerIds: storageHelper('all-player-ids'),
 }
 
 
@@ -50,14 +61,18 @@ function NewGame() {
   initialState.lobbyId = lobbyId ;
 
   // look up our player id in localstorage, if we can find one
-  initialState.myPlayerId = storage.myPlayerId(lobbyId).load();
+  initialState.myPlayerId = storage.myPlayerId(lobbyId).loadWithDefault(nanoid(12));
 
   if (hostPeerId) {
     initialState.hostPeerId = hostPeerId;
+    // initialState.allPlayerIds = storage.allPlayerIds(lobbyId).set([initialState.myPlayerId]);
   }
   else { // then we are host
-    initialState.gameSeed = storage.gameSeed(lobbyId).load();
+    initialState.gameSeed = storage.gameSeed(lobbyId).loadWithDefault(nanoid(12));
+    initialState.allPlayerIds = storage.allPlayerIds(lobbyId).loadWithDefault([initialState.myPlayerId]);
   }
+
+  // find 
 
   // const [dState, setDState] = useState(initialState);
 
@@ -97,7 +112,7 @@ function usePeer(initialState: Object) {
   }, []);
 
   useEffect(() => {
-    const peer = new Peer(nanoid(12), {
+    const peer = new Peer({
       host: "tbbts-server-bbsi2.sprites.app",
       port: "443",
       path: "/",
