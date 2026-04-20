@@ -5,6 +5,10 @@ import { nanoid } from 'nanoid'
 const storageHelper = (_KEY_SUFFIX: string) => {
   return (lobbyId: string) => {
     const key = [lobbyId, _KEY_SUFFIX].join(':');
+    const exists = () => {
+      const raw = localStorage.getItem(key);
+      return !!raw;
+    };
     const get = () => {
       const raw = localStorage.getItem(key);
       if (raw) {
@@ -12,7 +16,7 @@ const storageHelper = (_KEY_SUFFIX: string) => {
       } else {
         return null
       }
-    }
+    };
     const set = (v: any) => {
       localStorage.setItem(key, JSON.stringify({ val: v }) );
       return v;
@@ -24,13 +28,17 @@ const storageHelper = (_KEY_SUFFIX: string) => {
     const loadWithDefault = (defVal: any) => {
       let it = get();
       if (!it) {
-        it = defVal;
+        if (typeof defVal === 'function') { 
+          it = defVal();
+        } else {
+          it = defVal;
+        }
         set(it);
       }
       return it;
       
     };
-    return { get, set, loadWithDefault, update };
+    return { exists, get, set, loadWithDefault, update };
   };
 };
 
@@ -38,6 +46,7 @@ const storageHelper = (_KEY_SUFFIX: string) => {
 const storage = {
   gameSeed: storageHelper('game-seed'),
   myPlayerId: storageHelper('my-player-id'),
+  myPlayerInfo: storageHelper('my-player-info'),
   allPlayerIds: storageHelper('all-player-ids'),
 }
 
@@ -49,7 +58,7 @@ function NewGame() {
   const urlPathArray = window.location.pathname.split('/');
   // expect format: "", "lobby-id", "peer-id"?
   let lobbyId = urlPathArray[1];
-  let hostPeerId = urlPathArray[2];
+  let connectionHost = urlPathArray[2];
 
   if (!lobbyId) {
     // generate a new lobbyId and set it
@@ -61,22 +70,35 @@ function NewGame() {
   initialState.lobbyId = lobbyId ;
 
   // look up our player id in localstorage, if we can find one
-  initialState.myPlayerId = storage.myPlayerId(lobbyId).loadWithDefault(nanoid(12));
+  // if (storage.myPlayerId(lobbyId).exists()) {
+  //   const myPlayerInfo = storage.myPlayerInfo(lobbyId).get();
+  //   initialState.myPlayerInfo = myPlayerInfo;
 
-  if (hostPeerId) {
-    initialState.hostPeerId = hostPeerId;
+  //   initialState.myPlayerId = storage.myPlayerId(lobbyId).get();
+  //   initialState.gameSeed = storage.gameSeed(lobbyId).get();
+  //   initialState.allPlayerIds = storage.allPlayerIds(lobbyId).get();
+  //   initialState.allPlayerPeerIds = storage.allPlayerPeerIds(lobbyId).get();
+  // } else {
+  // }
+  initialState.myPlayerInfo = storage.myPlayerInfo(lobbyId).loadWithDefault(() => {
+    const myPlayerId = nanoid(12);
+    return {
+      myPlayerId,
+      gameSeed: nanoid(12),
+      allPlayerIds: [myPlayerId],
+      allPlayerPeerIds: { myPlayerId: [] },
+    };
+  });
+
+  if (connectionHost) {
+    initialState.connectionHost = connectionHost;
     // initialState.allPlayerIds = storage.allPlayerIds(lobbyId).set([initialState.myPlayerId]);
   }
-  else { // then we are host
-    initialState.gameSeed = storage.gameSeed(lobbyId).loadWithDefault(nanoid(12));
-    initialState.allPlayerIds = storage.allPlayerIds(lobbyId).loadWithDefault([initialState.myPlayerId]);
+  else {
+    // then we are host
   }
 
-  // find 
-
-  // const [dState, setDState] = useState(initialState);
-
-  // initiate webrtc
+  // initiate peer connection(s)
   const [reactiveCurrentGameState, requestChangeState] = usePeer(initialState);
 
   // onClick = requestChangeState(blah)
@@ -122,9 +144,9 @@ function usePeer(initialState: Object) {
     peer.on('open', id => {
       meUpdateGameState(old => { return {...old, peerId: id } });
       
-      const hostPeerId = gameState.hostPeerId;
-      if (hostPeerId) {
-        const conn = peer.connect(hostPeerId);
+      const connectionHost = gameState.connectionHost;
+      if (connectionHost) {
+        const conn = peer.connect(connectionHost);
         
         conn.on('open', () => {
           conn.send({ type: 'hello', peerId: id, myPlayerId: gameState.myPlayerId });
