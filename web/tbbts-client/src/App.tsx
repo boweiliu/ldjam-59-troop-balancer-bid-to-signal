@@ -10,14 +10,16 @@ function App() {
   const [count, setCount] = useState(0)
 
   const urlPathArray = window.location.pathname.split('/');
+  console.log({urlPathArray});
 
   useEffect(() => {
-    console.log({urlPathArray});
+    let conn = undefined;
+
     const peer = new Peer({
       host: "tbbts-server-bbsi2.sprites.app",
       port: "443",
       path: "/",
-      debug: 3,
+      debug: 1,
     });
     console.log("peer object", peer);
 
@@ -27,36 +29,42 @@ function App() {
     });
     peer.on('connection', (c) => {
       console.log('received connection', c);
+      c.on('data', (data) => {
+        console.log('received', {data});
+      });
+      c.on('open', () => {
+        c.send('pong');
+      });
     });
 
     peer.on('open', (id) => {
       console.log('peer open', id);
 
-    const to = urlPathArray[2];
-    if ( !!to ) { 
-      console.log('connecting to', to)
-      const conn = peer.connect(to);
-      console.log('conn is ', conn);
+      const to = urlPathArray[2];
+      if ( !!to ) { 
+        console.log('connecting to', to)
+        conn = peer.connect(to);
+        console.log('conn is ', conn);
 
-      conn.on('iceStateChanged', (state) => {  
-        console.log('ICE connection state:', state);  
-      });
+        conn.on('iceStateChanged', (state) => {  
+          console.log('ICE connection state:', state);  
+        });
 
-      conn.on('open', () => {
-        window.alert('connection is now up!');
-        conn.send('hi');
-      });
+        conn.on('open', () => {
+          console.log('connection is now up!');
+          conn.send(`hi from ${peer.id}`);
+        });
 
-      conn.on('error', (e) => {
-        console.log('connection errored', e);
-      });
-    }
+        conn.on('error', (e) => {
+          console.log('connection errored', e);
+        });
+      }
     });
 
     return () => {
-      // conn.close();
-      // peer.destroy();
-      // peer.disconnect();
+      conn?.close();
+      peer?.destroy();
+      peer?.disconnect();
     };
   }, [count]);
 
