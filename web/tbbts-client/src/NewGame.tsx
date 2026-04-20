@@ -44,12 +44,27 @@ const storageHelper = (_KEY_SUFFIX: string) => {
 
 
 const storage = {
-  gameSeed: storageHelper('game-seed'),
-  myPlayerId: storageHelper('my-player-id'),
   myPlayerInfo: storageHelper('my-player-info'),
-  allPlayerIds: storageHelper('all-player-ids'),
 }
 
+
+const appendObservedPeerIdForPlayer = (gameState: any, upd: { peerId: string, playerId: string }) => {
+  const old = gameState;
+  const { peerId, playerId } = upd;
+  return {
+    ...old,
+    myPlayerInfo: {
+      ...(old.myPlayerInfo),
+      allPlayerPeerIds: {
+        ...(old.myPlayerInfo.allPlayerPeerIds),
+        [playerId]: [
+          ...(old.myPlayerInfo.allPlayerPeerIds[playerId] || []),
+          peerId,
+        ],
+      }
+    }
+  };
+}
 
 function NewGame() {
   // const [count, setCount] = useState(0)
@@ -86,7 +101,7 @@ function NewGame() {
       myPlayerId,
       gameSeed: nanoid(12),
       allPlayerIds: [myPlayerId],
-      allPlayerPeerIds: { myPlayerId: [] },
+      allPlayerPeerIds: { [myPlayerId]: [] },
     };
   });
 
@@ -142,7 +157,9 @@ function usePeer(initialState: Object) {
     });
     peer.on('error', e => { /* hmm */ })
     peer.on('open', id => {
-      meUpdateGameState(old => { return {...old, peerId: id } });
+
+      // meUpdateGameState(old => { return {...old, peerId: id } });
+      meUpdateGameState(old => appendObservedPeerIdForPlayer(old, { peerId: id, playerId: old.myPlayerInfo.myPlayerId }));
       
       const connectionHost = gameState.connectionHost;
       if (connectionHost) {
