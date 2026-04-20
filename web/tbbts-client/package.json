@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "knuth-shuffle-seeded": "^1.0.6",
+    "nanoid": "^5.1.9",
     "peerjs": "^1.5.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"

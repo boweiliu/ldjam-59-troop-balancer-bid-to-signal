@@ -3,10 +3,12 @@ import { Peer } from 'peerjs'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
-import './App.css'
+import NewGame from './NewGame'
 
 
-function App() {
+const App = NewGame
+
+function App2() {
   const [count, setCount] = useState(0)
 
   const urlPathArray = window.location.pathname.split('/');
